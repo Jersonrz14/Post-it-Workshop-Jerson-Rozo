@@ -3,9 +3,9 @@ const addButton = document.getElementById('add-note-button');
 const notesContainer = document.getElementById('notes-container');
 const toggleThemeButton = document.getElementById('toggle-theme-button');
 const body = document.body;
-const colors = ['note-yellow'];
+const colors = ['note-yellow', 'note-blue', 'note-pink'] ;
 
-function createNoteElement(text, colorClass) {
+function createNoteElement(text, colorClass) { //Crear Notas
     const noteDiv = document.createElement('div');
     noteDiv.classList.add('note', colorClass); 
     noteDiv.textContent = text;
@@ -18,9 +18,10 @@ function createNoteElement(text, colorClass) {
     return noteDiv;
 }
 
-function loadNotes() {
-    const storedNotes = [];
-    console.log(storedNotes);
+
+
+function loadNotes() { //Cargar Notas
+    const storedNotes = localStorage.getItem('Notes'); 
     if (storedNotes) {
         const notes = JSON.parse(storedNotes);
         notes.forEach(noteData => {
@@ -30,7 +31,7 @@ function loadNotes() {
     }
 }
 
-function setInitialTheme() {
+function setInitialTheme() { //Configurando el Dark Mode
     const isDarkMode = localStorage.getItem('isDarkMode') === 'true';
     if (isDarkMode) {
         body.classList.add('dark-mode');
@@ -38,11 +39,13 @@ function setInitialTheme() {
     }
 }
 
-noteInput.addEventListener('input', () => {
+
+
+noteInput.addEventListener('input', () => { //Añadir el input
     addButton.disabled = noteInput.value.trim() === '';
 });
 
-toggleThemeButton.addEventListener('click', () => {
+toggleThemeButton.addEventListener('click', () => { // Cambio al Dark mode
     body.classList.toggle('dark-mode');
     const isDarkMode = body.classList.contains('dark-mode');
     localStorage.setItem('isDarkMode', isDarkMode);
@@ -61,7 +64,7 @@ notesContainer.addEventListener('dblclick', (event) => {
         target.appendChild(textarea);
         textarea.focus();
 
-        function saveEdit() {
+        function saveEdit() { //Guardar texto en local storage
             const newText = textarea.value.trim();
             target.textContent = newText;
             target.classList.remove('editing');
@@ -83,14 +86,12 @@ notesContainer.addEventListener('dblclick', (event) => {
     }
 });
 
-addButton.addEventListener('click', () => {
+addButton.addEventListener('click', () => { //Crear elementos
     const noteText = noteInput.value.trim();
     if (noteText !== '') {
         const randomColor = colors[Math.floor(Math.random() * colors.length)];
         const newNote = createNoteElement(noteText, randomColor);
         notesContainer.appendChild(newNote);
-        const newNoteErr = createNoteElement(noteText, randomColor);
-        notesContainer.appendChild(newNoteErr);
         noteInput.value = '';
         addButton.disabled = true;
         saveNotes();
